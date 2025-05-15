@@ -1,0 +1,8 @@
+{
+    "watch": [
+        "app",
+        "public"
+    ],
+    "ext": "js,jsx,ts,tsx,css,html,png,jpg,ico,svg,webp",
+    "exec": "pnpm run build"
+}
