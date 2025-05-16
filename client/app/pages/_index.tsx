@@ -1,4 +1,7 @@
+import { lazy } from "react";
 import type { MetaArgs } from "react-router";
+import Intro from "~/elements/index/Intro";
+import PageLayout from "~/layouts/Page";
 import { useAPI } from "~/lib/ws";
 
 export function meta({ }: MetaArgs) {
@@ -8,9 +11,16 @@ export function meta({ }: MetaArgs) {
     ]
 }
 
+const Features = lazy(() => import('~/elements/index/Features'));
+
 export default function Page() {
     const api = useAPI();
     if (!api) return (<></>)
 
-    return (<></>)
+    return (
+        <PageLayout>
+            <Intro />
+            <Features />
+        </PageLayout>
+    )
 }

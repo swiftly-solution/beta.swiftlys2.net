@@ -9,7 +9,9 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-navigation-menu": "^1.2.12",
+    "@radix-ui/react-slot": "^1.2.2",
     "@react-router/fs-routes": "^7.6.0",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
