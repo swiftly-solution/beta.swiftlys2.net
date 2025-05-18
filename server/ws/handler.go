@@ -1,29 +1,23 @@
 package ws
 
 import (
+	"beta-swiftlys2-net/auth"
+	"beta-swiftlys2-net/types"
 	"encoding/json"
 )
 
-type Event struct {
-	Type string          `json:"type"`
-	Data json.RawMessage `json:"data"`
-}
-
-type Response struct {
-	Broadcast bool
-	Data      interface{}
-}
-
-func HandleEvent(c *Client, msg []byte) Response {
-	var event Event
+func HandleEvent(c *types.Client, msg []byte) types.Response {
+	var event types.Event
 	if err := json.Unmarshal(msg, &event); err != nil {
-		return Response{Broadcast: false, Data: map[string]string{"error": "invalid format"}}
+		return types.Response{Broadcast: false, Data: map[string]string{"error": "invalid format"}}
 	}
 
 	switch event.Type {
 	case "echo":
-		return Response{Broadcast: true, Data: map[string]string{"message": "muie blu"}}
+		return types.Response{Broadcast: true, Data: map[string]string{"message": "reply"}}
+	case "login":
+		return auth.LoginUser(c)
 	default:
-		return Response{Broadcast: false, Data: map[string]string{"error": "unknown event"}}
+		return types.Response{Broadcast: false, Data: map[string]string{"error": "unknown event"}}
 	}
 }

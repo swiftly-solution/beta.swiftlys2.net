@@ -1,31 +1,18 @@
 package main
 
 import (
+	"beta-swiftlys2-net/db"
 	"beta-swiftlys2-net/ws"
-	"strings"
 
-	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	hub := ws.NewHub()
-	go hub.Run()
+	godotenv.Load(".env")
 
-	router := gin.New()
+	db.SetupDB()
 
-	router.Use(gin.Recovery())
+	db.LoadModels()
 
-	router.Use(static.Serve("/", static.LocalFile("../client/build/client", false)))
-	router.NoRoute(func(ctx *gin.Context) {
-		if !strings.HasPrefix(ctx.Request.URL.Path, "/api") {
-			ctx.File("../client/build/client/index.html")
-		}
-	})
-
-	router.GET("/api", func(ctx *gin.Context) {
-		ws.ServeWs(hub, ctx.Writer, ctx.Request)
-	})
-
-	router.Run(":9999")
+	ws.SetupWebServices()
 }

@@ -129,7 +129,7 @@ export default function Features() {
                 {features.map(({ icon, title, description }: FeatureProps) => (
                     <Card
                         key={title}
-                        className="bg-muted/50 hover:bg-muted/80 transition-colors shadow-md dark:shadow-slate-900"
+                        className="bg-muted/50 hover:bg-muted/80 transition-colors shadow-md dark:shadow-[#00ffee]/30"
                     >
                         <CardHeader>
                             <CardTitle className="flex flex-row gap-4 items-center">

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"beta-swiftlys2-net/types"
 	"encoding/json"
 	"net/http"
 
@@ -9,60 +10,56 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
-type Client struct {
-	hub  *Hub
-	conn *websocket.Conn
-	send chan []byte
-}
-
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func ServeWs(hub *types.Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client.hub.register <- client
+	client := &types.Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), Cookies: map[string]any{
+		"authenticated": false,
+	}}
+	client.Hub.Register <- client
 
-	go client.writePump()
-	go client.readPump()
+	client.ReadPump = func() {
+		defer func() {
+			client.Hub.Unregister <- client
+			client.Conn.Close()
+		}()
 
-}
+		for {
+			_, message, err := client.Conn.ReadMessage()
+			if err != nil {
+				break
+			}
 
-func (c *Client) readPump() {
-	defer func() {
-		c.hub.unregister <- c
-		c.conn.Close()
-	}()
+			response := HandleEvent(client, message)
 
-	for {
-		_, message, err := c.conn.ReadMessage()
-		if err != nil {
-			break
-		}
-
-		response := HandleEvent(c, message)
-
-		if response.Broadcast {
-			c.hub.BroadcastJSON(response.Data)
-		} else {
-			data, err := json.Marshal(response.Data)
-			if err == nil {
-				c.send <- data
+			if response.Broadcast {
+				client.Hub.BroadcastJSON(response.Data)
+			} else {
+				data, err := json.Marshal(response.Data)
+				if err == nil {
+					client.Send <- data
+				}
 			}
 		}
 	}
-}
 
-func (c *Client) writePump() {
-	defer c.conn.Close()
-	for {
-		select {
-		case message, ok := <-c.send:
-			if !ok {
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-				return
+	client.WritePump = func() {
+		defer client.Conn.Close()
+		for {
+			select {
+			case message, ok := <-client.Send:
+				if !ok {
+					client.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+					return
+				}
+				client.Conn.WriteMessage(websocket.TextMessage, message)
 			}
-			c.conn.WriteMessage(websocket.TextMessage, message)
 		}
 	}
+
+	go client.WritePump()
+	go client.ReadPump()
+
 }

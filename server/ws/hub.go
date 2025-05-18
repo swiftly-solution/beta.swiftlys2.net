@@ -1,50 +1,48 @@
 package ws
 
-import "encoding/json"
+import (
+	"beta-swiftlys2-net/types"
+	"encoding/json"
+)
 
-type Hub struct {
-	clients    map[*Client]bool
-	broadcast  chan []byte
-	register   chan *Client
-	unregister chan *Client
-}
-
-func NewHub() *Hub {
-	return &Hub{
-		broadcast:  make(chan []byte),
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
-		clients:    make(map[*Client]bool),
+func NewHub() *types.Hub {
+	h := &types.Hub{
+		Broadcast:  make(chan []byte),
+		Register:   make(chan *types.Client),
+		Unregister: make(chan *types.Client),
+		Clients:    make(map[*types.Client]bool),
 	}
-}
 
-func (h *Hub) Run() {
-	for {
-		select {
-		case client := <-h.register:
-			h.clients[client] = true
-		case client := <-h.unregister:
-			if _, ok := h.clients[client]; ok {
-				delete(h.clients, client)
-				close(client.send)
-			}
-		case message := <-h.broadcast:
-			for client := range h.clients {
-				select {
-				case client.send <- message:
-				default:
-					close(client.send)
-					delete(h.clients, client)
+	h.Run = func() {
+		for {
+			select {
+			case client := <-h.Register:
+				h.Clients[client] = true
+			case client := <-h.Unregister:
+				if _, ok := h.Clients[client]; ok {
+					delete(h.Clients, client)
+					close(client.Send)
+				}
+			case message := <-h.Broadcast:
+				for client := range h.Clients {
+					select {
+					case client.Send <- message:
+					default:
+						close(client.Send)
+						delete(h.Clients, client)
+					}
 				}
 			}
 		}
 	}
-}
 
-func (h *Hub) BroadcastJSON(v interface{}) {
-	data, err := json.Marshal(v)
-	if err != nil {
-		return
+	h.BroadcastJSON = func(v interface{}) {
+		data, err := json.Marshal(v)
+		if err != nil {
+			return
+		}
+		h.Broadcast <- data
 	}
-	h.broadcast <- data
+
+	return h
 }
