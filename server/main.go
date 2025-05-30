@@ -2,7 +2,7 @@ package main
 
 import (
 	"beta-swiftlys2-net/db"
-	"beta-swiftlys2-net/ws"
+	"beta-swiftlys2-net/web/ws"
 
 	"github.com/joho/godotenv"
 )

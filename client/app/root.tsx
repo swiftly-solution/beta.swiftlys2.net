@@ -10,6 +10,10 @@ import {
 
 import "./app.css";
 import { ThemeProvider } from "./components/theme-provider";
+import { useEffect } from "react";
+import { useAPI } from "./lib/ws";
+import { useServerStore } from "./stores/server";
+import { Toaster } from "./components/ui/sonner";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,6 +29,17 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const api = useAPI()
+  const serverStore = useServerStore()
+
+  useEffect(() => {
+    if (api) {
+      api.sendEvent("server-info", {}, (data) => {
+        serverStore.setServerName(data.name)
+      });
+    }
+  }, [api])
+
   return (
     <html lang="en">
       <head>
@@ -35,6 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

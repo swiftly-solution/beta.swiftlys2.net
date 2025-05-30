@@ -1,6 +1,6 @@
 package db
 
-import "beta-swiftlys2-net/models"
+import "beta-swiftlys2-net/db/models"
 
 func LoadModels() {
 	GetDB().AutoMigrate(&models.User{})

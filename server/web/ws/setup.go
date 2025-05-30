@@ -15,6 +15,8 @@ func SetupWebServices() {
 
 	router.Use(gin.Recovery())
 
+	router.RemoteIPHeaders = []string{"CF-Connecting-IP", "X-Forwarded-For"}
+
 	router.Use(static.Serve("/", static.LocalFile("../client/build/client", false)))
 	router.NoRoute(func(ctx *gin.Context) {
 		if !strings.HasPrefix(ctx.Request.URL.Path, "/api") {

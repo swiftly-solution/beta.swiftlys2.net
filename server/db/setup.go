@@ -15,6 +15,13 @@ func SetupDB() {
 	if err != nil {
 		panic(err)
 	}
+
+	sqlx, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+
+	sqlx.SetConnMaxLifetime(0)
 }
 
 func GetDB() *gorm.DB {

@@ -1,8 +1,9 @@
 package ws
 
 import (
-	"beta-swiftlys2-net/auth"
 	"beta-swiftlys2-net/types"
+	"beta-swiftlys2-net/web/auth"
+	"beta-swiftlys2-net/web/info"
 	"encoding/json"
 )
 
@@ -13,10 +14,12 @@ func HandleEvent(c *types.Client, msg []byte) types.Response {
 	}
 
 	switch event.Type {
-	case "echo":
-		return types.Response{Broadcast: true, Data: map[string]string{"message": "reply"}}
-	case "login":
-		return auth.LoginUser(c)
+	case "auth-login":
+		return auth.LoginUser(c, event.Data)
+	case "auth-signup":
+		return auth.SignupUser(c, event.Data)
+	case "server-info":
+		return info.GetServer(c)
 	default:
 		return types.Response{Broadcast: false, Data: map[string]string{"error": "unknown event"}}
 	}
