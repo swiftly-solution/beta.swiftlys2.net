@@ -33,7 +33,11 @@ class WebSocketAPI {
         };
         this.ws.onclose = () => {
             this.ready = false
+            this.init();
         };
+        this.ws.onerror = () => {
+            this.ws?.close();
+        }
 
         this.ws.onmessage = (ev) => {
             try {

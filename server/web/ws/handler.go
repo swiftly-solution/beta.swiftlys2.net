@@ -18,6 +18,8 @@ func HandleEvent(c *types.Client, msg []byte) types.Response {
 		return auth.LoginUser(c, event.Data)
 	case "auth-signup":
 		return auth.SignupUser(c, event.Data)
+	case "fetch-account":
+		return auth.FetchAccount(c, event.Data)
 	case "server-info":
 		return info.GetServer(c)
 	default:

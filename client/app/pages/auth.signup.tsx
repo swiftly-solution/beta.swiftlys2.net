@@ -1,5 +1,6 @@
+import Cookies from "js-cookie"
 import { useEffect, useState, type FormEvent } from "react"
-import { Link, redirect, useLocation, useNavigate, type MetaArgs } from "react-router"
+import { Link, useLocation, useNavigate, type MetaArgs } from "react-router"
 import { toast } from "sonner"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
@@ -7,6 +8,7 @@ import { Label } from "~/components/ui/label"
 import { PrepareForm } from "~/lib/forms"
 import { useAPI } from "~/lib/ws"
 import { useServerStore } from "~/stores/server"
+import { useUserStore, type User } from "~/stores/user"
 import signupSchema from "~/validation/auth/signup"
 import { handleZodValidation, type ValidationError } from "~/validation/HandleValidation"
 
@@ -26,6 +28,11 @@ export default function Page() {
     const location = useLocation()
     const navigate = useNavigate()
     const query = new URLSearchParams(location.search)
+    const userStore = useUserStore();
+
+    useEffect(() => {
+        if (userStore.user != undefined) navigate(query.has("from") ? String(query.get("from")) : "/profile");
+    }, [userStore.user])
 
     const changeSignUp = (e: FormEvent<HTMLFormElement>) => {
         handleZodValidation({
@@ -59,8 +66,15 @@ export default function Page() {
                     loading: "Checking request...",
                     success: (data: Record<string, any>) => {
                         setTimeout(() => {
-                            navigate("/profile")
+                            navigate(query.has("from") ? String(query.get("from")) : "/profile")
                         }, 1000);
+
+                        userStore.setUser(data.user as User)
+                        if (data.session) {
+                            if (Cookies.get("session") != undefined) Cookies.remove("session")
+                            Cookies.set("session", data.session, { expires: 1, secure: true })
+                        }
+
                         return data.message
                     },
                     error: (data: Record<string, any>) => {

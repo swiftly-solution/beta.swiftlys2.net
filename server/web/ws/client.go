@@ -10,14 +10,12 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
-func ServeWs(hub *types.Hub, w http.ResponseWriter, r *http.Request) {
+func ServeWs(hub *types.Hub, w http.ResponseWriter, r *http.Request, ip string) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return
 	}
-	client := &types.Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), Cookies: map[string]any{
-		"authenticated": false,
-	}}
+	client := &types.Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), IP: ip}
 	client.Hub.Register <- client
 
 	client.ReadPump = func() {

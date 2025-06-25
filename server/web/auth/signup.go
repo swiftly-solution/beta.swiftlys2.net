@@ -5,6 +5,7 @@ import (
 	"beta-swiftlys2-net/db/models"
 	"beta-swiftlys2-net/types"
 	"beta-swiftlys2-net/utils"
+	"beta-swiftlys2-net/web/session"
 	"beta-swiftlys2-net/web/validator"
 	"beta-swiftlys2-net/web/validator/auth"
 	"database/sql"
@@ -50,8 +51,9 @@ func SignupUser(c *types.Client, data map[string]any) types.Response {
 		return types.Response{Broadcast: false, Data: map[string]any{"event": "auth-signup", "data": map[string]any{"status": 403, "message": fmt.Sprintf("An error has occured while trying to insert the user in the database. Error: %+v", result.Error)}}}
 	}
 
-	// Create session and redirect to profile
-	return types.Response{Broadcast: false, Data: map[string]any{"event": "auth-signup", "data": map[string]any{"status": 200, "message": "You've succesfully signed up. Please wait a second..."}}}
+	session := session.CreateSession(c, *user)
+
+	return types.Response{Broadcast: false, Data: map[string]any{"event": "auth-signup", "data": map[string]any{"status": 200, "message": "You've succesfully signed up. Please wait a second...", "user": user, "session": session}}}
 }
 
 func HashPassword(password string) (string, error) {

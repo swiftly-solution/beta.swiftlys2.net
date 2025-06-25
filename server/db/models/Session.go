@@ -8,6 +8,5 @@ type Session struct {
 	UserID    int
 	User      User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	IP        string
-	UserAgent string `gorm:"column:userAgent"`
-	OTPLogged bool   `gorm:"column:otpLogged;default:false"`
+	OTPLogged bool `gorm:"column:otpLogged;default:false"`
 }

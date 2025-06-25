@@ -8,6 +8,8 @@ import (
 )
 
 func SetupWebServices() {
+	gin.SetMode(gin.ReleaseMode)
+
 	hub := NewHub()
 	go hub.Run()
 
@@ -25,7 +27,7 @@ func SetupWebServices() {
 	})
 
 	router.GET("/api", func(ctx *gin.Context) {
-		ServeWs(hub, ctx.Writer, ctx.Request)
+		ServeWs(hub, ctx.Writer, ctx.Request, ctx.ClientIP())
 	})
 
 	router.Run(":9999")
