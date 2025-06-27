@@ -14,4 +14,9 @@ export default defineConfig({
       }
     }
   }*/
+  server: {
+    allowedHosts: [
+      "beta.swiftlys2.net"
+    ]
+  }
 });

@@ -13,10 +13,14 @@ export interface User {
 
 interface UserState {
     user: User | undefined;
+    contentLoaded: boolean;
     setUser: (user: User | undefined) => void;
+    setContentLoaded: (value: boolean) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
     user: undefined,
-    setUser: (user: User | undefined) => set((state) => ({ user }))
+    contentLoaded: false,
+    setUser: (user: User | undefined) => set((state) => ({ user, contentLoaded: state.contentLoaded })),
+    setContentLoaded: (value: boolean) => set((state) => ({ user: state.user, contentLoaded: value }))
 }))

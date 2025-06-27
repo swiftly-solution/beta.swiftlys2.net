@@ -19,7 +19,7 @@ interface RouteGroup {
 
 const routeList: RouteGroup[] = [
     {
-        title: "Documentation",
+        title: "API Documentation",
         routes: [
             {
                 label: "Beginners",

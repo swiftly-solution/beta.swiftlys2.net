@@ -49,7 +49,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     } else {
                         Cookies.remove("session")
                     }
+                    userStore.setContentLoaded(true)
                 })
+            } else {
+                userStore.setContentLoaded(true)
             }
         }
     }, [api])
