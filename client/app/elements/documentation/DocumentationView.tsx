@@ -24,8 +24,10 @@ export default function DocumentationView({ category, pagekey }: { category: str
     }, [category, api])
 
     useEffect(() => {
+        setLoaded(false)
+
         api?.sendEvent("fetch-documentation", { pagekey, category }, (response) => {
-            if (!loaded) setLoaded(true)
+            setLoaded(true)
             if (response.status == 200) {
                 setPage(response.data)
             } else {
