@@ -19,6 +19,26 @@ interface RouteGroup {
 
 const routeList: RouteGroup[] = [
     {
+        title: "Guides",
+        routes: [
+            {
+                label: "Tutorials",
+                href: "/tutorials",
+                description: "Tutorials for how to work on Source2."
+            },
+            {
+                label: "Plugins",
+                href: "/plugin-guides",
+                description: "Guides for plugins created by Swiftly Team."
+            },
+            {
+                label: "Extensions",
+                href: "/ext-guides",
+                description: "Guides for extensions created by Swiftly Team."
+            }
+        ]
+    },
+    {
         title: "API Documentation",
         routes: [
             {

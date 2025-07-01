@@ -43,7 +43,7 @@ func FetchAccountFromSession(token string, c *types.Client) *models.User {
 	}
 
 	var sessions []models.Session
-	err := db.GetDB().Model(&models.Session{}).Where("user_id = ? and token = ? and (UNIX_TIMESTAMP() - created_at <= 86400)", jwtSession.ID, jwtSession.Token).Limit(1).Find(&sessions).Error
+	err := db.GetDB().Model(&models.Session{}).Select("ip").Where("user_id = ? and token = ? and (UNIX_TIMESTAMP() - created_at <= 86400)", jwtSession.ID, jwtSession.Token).Limit(1).Find(&sessions).Error
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -58,7 +58,7 @@ func FetchAccountFromSession(token string, c *types.Client) *models.User {
 	}
 
 	var users []models.User
-	err = db.GetDB().Model(&models.User{}).Where("id = ?", session.UserID).Limit(1).Find(&users).Error
+	err = db.GetDB().Model(&models.User{}).Where("id = ?", jwtSession.ID).Limit(1).Find(&users).Error
 	if err != nil {
 		log.Println(err)
 		return nil

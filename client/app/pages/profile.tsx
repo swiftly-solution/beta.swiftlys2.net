@@ -20,7 +20,7 @@ export default function Page() {
     }, [user])
 
     return (
-        <PageWithNavbarLayout>
+        <PageWithNavbarLayout navbar={<></>} head={<></>}>
             {
                 !user.user ? "Loading..." :
                     <>

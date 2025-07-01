@@ -6,4 +6,5 @@ func LoadModels() {
 	GetDB().AutoMigrate(&models.User{})
 	GetDB().AutoMigrate(&models.Session{})
 	GetDB().AutoMigrate(&models.ForgotPassword{})
+	GetDB().AutoMigrate(&models.Documentation{})
 }
