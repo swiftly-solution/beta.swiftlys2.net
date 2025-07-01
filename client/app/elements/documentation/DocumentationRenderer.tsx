@@ -21,6 +21,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import "~/markdownLightStyle.css";
 import "~/markdownDarkStyle.css";
 import 'remark-github-blockquote-alert/alert.css'
+import 'highlight.js/styles/github-dark.css';
 
 function FallbackRender({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: any }) {
     return (
