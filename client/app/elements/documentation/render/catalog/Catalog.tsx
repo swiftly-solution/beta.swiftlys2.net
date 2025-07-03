@@ -7,7 +7,7 @@ import { Link, useLocation } from "react-router";
 import type { Documentation } from "~/types/docs/Documentation";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 
-export default function Catalog({ navbarData }: { navbarData: Documentation[] }) {
+export default function Catalog({ navbarData, filter }: { navbarData: Documentation[], filter: string[] }) {
     const route = useLocation().pathname
     const docCategory = useMemo(() => route.split("/")[1], [route])
     const interestKey = useMemo(() => {
@@ -17,25 +17,31 @@ export default function Catalog({ navbarData }: { navbarData: Documentation[] })
         return split.join(".")
     }, [route])
 
+    const shouldFilter = (filter.length > 0)
     const catalogData = prepareCatalogData(navbarData, docCategory, interestKey)
     if (!catalogData) return <LoaderIcon className="animate-spin" />
 
     return (
         <div className="sm:flex sm:flex-col md:grid md:grid-cols-3 gap-4">
-            {catalogData.items.map((value) => (
-                <Link key={value.title} prefetch={"intent"} to={value.url}>
-                    <Card
-                        className="bg-muted/50 hover:bg-muted/80 transition-colors shadow-md dark:shadow-slate-900 cursor-pointer"
-                    >
-                        <CardHeader>
-                            <CardTitle className="flex flex-row gap-4 items-center">
-                                {value.icon != "" ? <FontAwesomeIcon icon={value.icon as IconProp} /> : null}
-                                {value.title}
-                            </CardTitle>
-                        </CardHeader>
-                    </Card>
-                </Link>
-            ))}
+            {catalogData.items.map((value) => {
+                if (!shouldFilter || filter.includes(value.key)) {
+                    return (
+                        <Link key={value.title} prefetch={"intent"} to={value.url}>
+                            <Card
+                                className="bg-muted/50 hover:bg-muted/80 transition-colors shadow-md dark:shadow-slate-900 cursor-pointer"
+                            >
+                                <CardHeader>
+                                    <CardTitle className="flex flex-row gap-4 items-center">
+                                        {value.icon != "" ? <FontAwesomeIcon icon={value.icon as IconProp} /> : null}
+                                        {value.title}
+                                    </CardTitle>
+                                </CardHeader>
+                            </Card>
+                        </Link>
+                    )
+                } else return null
+            })
+            }
         </div>
     )
 }
