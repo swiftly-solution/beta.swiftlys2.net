@@ -19,6 +19,16 @@ interface RouteGroup {
 
 const routeList: RouteGroup[] = [
     {
+        title: "Tools",
+        routes: [
+            {
+                label: "Profiler",
+                href: "/profiler",
+                description: "See the resource monitor profiler in browser."
+            }
+        ]
+    },
+    {
         title: "Guides",
         routes: [
             {
