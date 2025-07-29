@@ -25,7 +25,7 @@ export default function Catalog({ navbarData, filter }: { navbarData: Documentat
         return split.join(".")
     }, [route])
 
-    const shouldFilter = (filter.length > 0)
+    const shouldFilter = (filter.filter((a) => a.length > 0).length > 0)
     const catalogData = prepareCatalogData(navbarData, docCategory, interestKey)
     if (!catalogData) return <LoaderIcon className="animate-spin" />
 
