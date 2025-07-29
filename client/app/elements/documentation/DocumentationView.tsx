@@ -24,6 +24,8 @@ export default function DocumentationView({ category, pagekey }: { category: str
     }, [category, api])
 
     useEffect(() => {
+        if (page && page.key == pagekey && page.category == category) return;
+
         setLoaded(false)
 
         api?.sendEvent("fetch-documentation", { pagekey, category }, (response) => {

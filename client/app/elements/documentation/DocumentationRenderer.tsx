@@ -73,7 +73,7 @@ export default function DocumentationRender({ content, navbarData }: { content: 
                         // @ts-expect-error
                         tabstrigger: ({ children, ...props }) => <TabsTrigger {...props}>{children}</TabsTrigger>,
                         // @ts-expect-error
-                        catalog: ({ filter, ...props }) => <Catalog {...props} filter={filter || []} navbarData={navbarData} />
+                        catalog: ({ filter, ...props }) => <Catalog {...props} filter={(filter || "").split(",")} navbarData={navbarData} />
                     }}
                 >{content}</Markdown>
             </div>
