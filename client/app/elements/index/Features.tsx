@@ -93,7 +93,7 @@ export default function Features() {
         {
             icon: <CodeSquareIcon />,
             title: "Scripting Languages",
-            description: "Using Lua, JavaScript or TypeScript for plugin development."
+            description: "Using Lua or C# for plugin development."
         },
         {
             icon: <Code2Icon />,
