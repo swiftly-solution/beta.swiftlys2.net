@@ -5,16 +5,9 @@ import (
 	adocs "beta-swiftlys2-net/web/admin/docs"
 	"beta-swiftlys2-net/web/auth"
 	"beta-swiftlys2-net/web/docs"
-	"beta-swiftlys2-net/web/info"
-	"encoding/json"
 )
 
-func HandleEvent(c *types.Client, msg []byte) types.Response {
-	var event types.Event
-	if err := json.Unmarshal(msg, &event); err != nil {
-		return types.Response{Broadcast: false, Data: map[string]string{"error": "invalid format"}}
-	}
-
+func HandleEvent(c *types.Client, event types.Event) types.Response {
 	switch event.Type {
 	case "auth-login":
 		return auth.LoginUser(c, event.Data)
@@ -36,8 +29,8 @@ func HandleEvent(c *types.Client, msg []byte) types.Response {
 		return adocs.DeletePage(c, event.Data)
 	case "save-docs-page":
 		return adocs.SavePage(c, event.Data)
-	case "server-info":
-		return info.GetServer(c)
+	case "upload-docs-pages":
+		return adocs.UploadPages(c, event.Data)
 	default:
 		return types.Response{Broadcast: false, Data: map[string]string{"error": "unknown event"}}
 	}

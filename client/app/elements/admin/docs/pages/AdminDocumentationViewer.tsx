@@ -9,6 +9,7 @@ import { useAPI } from "~/lib/ws"
 import type { Documentation } from "~/types/docs/Documentation";
 import AdminCreatePage from "./AdminCreatePage";
 import AdminDeletePage from "./AdminDeletePage";
+import AdminUploadPages from "./AdminUploadPages";
 
 const columns: ColumnDef<Documentation>[] = [
     {
@@ -54,7 +55,10 @@ export default function AdminDocumentationViewer() {
 
     return (
         <DataTable columns={columns} data={pages} filterBy="key">
-            <AdminCreatePage />
+            <div className="flex flex-row gap-2">
+                <AdminUploadPages />
+                <AdminCreatePage />
+            </div>
         </DataTable>
     )
 }

@@ -72,6 +72,11 @@ const routeList: RouteGroup[] = [
         title: "SDK",
         routes: [
             {
+                label: "Core",
+                href: "/sdk",
+                description: "View the SDK available through Swiftly for the core stuff."
+            },
+            {
                 label: "Counter-Strike: 2",
                 href: "/sdk/cs2",
                 description: "View the SDK available through Swiftly for Counter-Strike: 2."

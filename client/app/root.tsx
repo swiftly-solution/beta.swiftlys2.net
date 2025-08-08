@@ -12,7 +12,6 @@ import "./app.css";
 import { ThemeProvider } from "./components/theme-provider";
 import { useEffect } from "react";
 import { useAPI } from "./lib/ws";
-import { useServerStore } from "./stores/server";
 import { Toaster } from "./components/ui/sonner";
 import Cookies from 'js-cookie'
 import { useUserStore, type User } from "./stores/user";
@@ -36,15 +35,10 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const api = useAPI()
-    const serverStore = useServerStore()
     const userStore = useUserStore();
 
     useEffect(() => {
         if (api) {
-            api.sendEvent("server-info", {}, (data) => {
-                serverStore.setServerName(data.name)
-            });
-
             const cookieValue = Cookies.get("session")
             if (cookieValue != undefined && cookieValue != "undefined") {
                 api.sendEvent("fetch-account", { token: cookieValue }, (data) => {
