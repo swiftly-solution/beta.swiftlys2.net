@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
-  /*build: {
+  build: {
     rollupOptions: {
       output: {
         entryFileNames: 'assets/[name].js',
@@ -13,10 +13,12 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]'
       }
     }
-  }*/
+  },
   server: {
     allowedHosts: [
-      "beta.swiftlys2.net"
+      "beta.swiftlys2.net",
+      "swiftlys2.net",
+      "swiftlycs2.net"
     ]
   }
 });
